@@ -2,18 +2,18 @@
 
 This roadmap groups the remaining work by product maturity.
 
-## Phase 1: Make The Prototype Interactive
+## ✅ Phase 1: Make The Prototype Interactive — Complete
 
-- Implement article search.
-- Make bottom navigation links point to real pages.
-- Add Explore page.
-- Add Saved page.
-- Add Languages page.
-- Add Profile page.
-- Implement Save button using local storage.
-- Implement Share button using the Web Share API with clipboard fallback.
-- Implement dark mode.
-- Add article-level SEO metadata.
+- [x] Implement article search (live dropdown, filters by headline/summary/category).
+- [x] Make bottom navigation links point to real pages with active highlighting.
+- [x] Add Explore page.
+- [x] Add Saved page.
+- [x] Add Languages page.
+- [x] Add Profile page.
+- [x] Implement Save button using localStorage.
+- [x] Implement Share button using the Web Share API with clipboard fallback.
+- [x] Implement dark mode (CSS class toggle, persists via localStorage).
+- [x] Add article-level SEO metadata (title, description, OpenGraph, Twitter card).
 
 ## Phase 2: Improve Content Quality
 
@@ -39,7 +39,7 @@ This roadmap groups the remaining work by product maturity.
 - Add a database.
 - Add a CMS or admin panel.
 - Add authentication.
-- Store saved articles per user.
+- Store saved articles per user (currently device-local only).
 - Add article publishing workflow.
 - Add editorial review states.
 - Add image upload and management.

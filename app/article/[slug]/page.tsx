@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import {
   Confidence,
@@ -8,6 +9,7 @@ import {
   SourceTransparency,
   Timeline
 } from "@/components/Platform";
+import { SaveButton, ShareButton } from "@/components/Interactive";
 import { articles, languages } from "@/data/news";
 
 type PageProps = {
@@ -16,6 +18,27 @@ type PageProps = {
 
 export function generateStaticParams() {
   return articles.map((article) => ({ slug: article.slug }));
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const article = articles.find((a) => a.slug === slug);
+  if (!article) return {};
+  return {
+    title: `${article.headline} | Bharat Brief`,
+    description: article.summary,
+    openGraph: {
+      title: article.headline,
+      description: article.summary,
+      type: "article",
+      publishedTime: article.publishedDate,
+    },
+    twitter: {
+      card: "summary",
+      title: article.headline,
+      description: article.summary,
+    },
+  };
 }
 
 export default async function ArticlePage({ params }: PageProps) {
@@ -34,6 +57,10 @@ export default async function ArticlePage({ params }: PageProps) {
             <span>{article.publishedDate}</span>
             <span>{article.language}</span>
             <span>AI News Analyst</span>
+          </div>
+          <div className="card-actions" style={{ marginTop: 18 }}>
+            <SaveButton slug={article.slug} />
+            <ShareButton title={article.headline} slug={article.slug} />
           </div>
         </div>
         <EditorialVisual type={article.visual} />

@@ -59,6 +59,11 @@ select {
   z-index: 20;
 }
 
+.search-wrapper {
+  grid-column: 1 / -1;
+  position: relative;
+}
+
 .brand {
   align-items: center;
   display: inline-flex;
@@ -86,8 +91,8 @@ select {
   border-radius: 999px;
   display: flex;
   gap: 8px;
-  grid-column: 1 / -1;
   padding: 11px 14px;
+  width: 100%;
 }
 
 .search span {
@@ -922,7 +927,7 @@ select {
     padding: 16px 30px;
   }
 
-  .search {
+  .search-wrapper {
     grid-column: auto;
   }
 
@@ -1001,4 +1006,146 @@ select {
     gap: 16px;
     grid-template-columns: 1fr 0.7fr;
   }
+}
+
+/* ── Dark mode ────────────────────────────────────────────────────────────── */
+html.dark {
+  --background: #0d0d0d;
+  --primary: #f0f0f0;
+  --secondary: #999;
+  --border: #2a2a2a;
+  --surface: #1a1a1a;
+  --shadow: 0 18px 50px rgba(0, 0, 0, 0.4);
+}
+
+html.dark body {
+  background: var(--background);
+  color: var(--primary);
+}
+
+html.dark .topbar,
+html.dark .bottom-nav {
+  background: rgba(13, 13, 13, 0.92);
+}
+
+html.dark .top-story,
+html.dark .article-card,
+html.dark .special-panel,
+html.dark .feature-card,
+html.dark .scheme-card,
+html.dark .explainer-card,
+html.dark .confidence,
+html.dark .premium-ad,
+html.dark .source-card,
+html.dark .related-row article,
+html.dark .phone-frame {
+  background: #161616;
+}
+
+html.dark .button.secondary,
+html.dark .card-actions button,
+html.dark .language-switch button,
+html.dark .nav-actions select,
+html.dark .icon-button {
+  background: #1a1a1a;
+  color: var(--primary);
+}
+
+html.dark .editorial-visual {
+  background: #111;
+}
+
+html.dark .explainer-card div {
+  background: #1a1a1a;
+}
+
+html.dark .search-dropdown {
+  background: #161616;
+  border-color: var(--border);
+}
+
+/* ── Search wrapper + dropdown ───────────────────────────────────────────── */
+.search {
+  grid-column: unset;
+  width: 100%;
+}
+
+.search-clear {
+  background: none;
+  border: none;
+  color: var(--secondary);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0 4px;
+}
+
+.search-dropdown {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  left: 0;
+  max-height: 360px;
+  overflow-y: auto;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 50;
+}
+
+.search-result {
+  border-bottom: 1px solid var(--border);
+  display: block;
+  padding: 14px 16px;
+  transition: background 120ms;
+}
+
+.search-result:last-child {
+  border-bottom: 0;
+}
+
+.search-result:hover {
+  background: var(--surface);
+}
+
+.search-result strong {
+  display: block;
+  font-size: 15px;
+  margin: 4px 0 2px;
+}
+
+.search-result p {
+  color: var(--secondary);
+  font-size: 13px;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.search-empty {
+  color: var(--secondary);
+  padding: 20px 16px;
+  text-align: center;
+}
+
+/* ── Bottom nav active state ─────────────────────────────────────────────── */
+.bottom-nav a.active {
+  background: var(--surface);
+  color: var(--primary);
+  font-weight: 700;
+}
+
+/* ── Save button saved state ─────────────────────────────────────────────── */
+.card-actions button.saved {
+  color: var(--accent);
+}
+
+/* ── Empty state ─────────────────────────────────────────────────────────── */
+.empty-state {
+  color: var(--secondary);
+  margin-top: 40px;
+  text-align: center;
+}
+
+.empty-state p {
+  margin: 6px 0;
 }

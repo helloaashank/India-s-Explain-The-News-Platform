@@ -35,24 +35,39 @@ The platform avoids clickbait, newspaper clutter, banner spam, intrusive ads, an
 
 ## Current App
 
-The current implementation is a static Next.js app using the App Router.
+The current implementation is an interactive Next.js prototype using the App Router.
 
 Built pages:
 
 - `/` - Home page with hero, search, top stories, latest briefings, special rails, and premium ad placement.
-- `/article/[slug]` - Static article explainer pages generated from local article data.
+- `/article/[slug]` - Article explainer pages with save, share, SEO metadata, and per-article OpenGraph tags.
+- `/explore` - Browse all articles with category chips.
+- `/saved` - Locally saved articles (localStorage).
+- `/languages` - Supported languages with native script labels.
+- `/profile` - Account hub (authentication not yet implemented).
 - `/schemes` - Government schemes explained.
-- `/upsc` - UPSC simplified current affairs page.
-- `/ipl` - IPL explained page.
+- `/upsc` - UPSC simplified current affairs.
+- `/ipl` - IPL explained.
 
 Main source files:
 
 - `app/page.tsx` - Home route.
-- `app/layout.tsx` - Global layout, top navigation, and bottom navigation.
-- `app/article/[slug]/page.tsx` - Article detail route.
-- `components/Platform.tsx` - Shared UI components.
+- `app/layout.tsx` - Global layout, top navigation, bottom navigation.
+- `app/article/[slug]/page.tsx` - Article detail route with `generateMetadata`.
+- `components/Platform.tsx` - Server components (Hero, HomeSections, article sections).
+- `components/Interactive.tsx` - Client components (SearchBar, DarkModeToggle, BottomNav, SaveButton, ShareButton, ArticleCard).
+- `components/Atoms.tsx` - Shared primitives (EditorialVisual, TrustPill).
 - `data/news.ts` - Static article, language, chip, source, and scheme data.
-- `app/globals.css` - Global styling and responsive design.
+- `app/globals.css` - Global styling, dark mode, responsive design.
+
+## Working Features
+
+- Live article search — filters by headline, summary, and category.
+- Dark mode — toggles `html.dark` class, persists across sessions via localStorage.
+- Save articles — stored in localStorage, visible on the Saved page.
+- Share articles — uses the Web Share API on mobile, clipboard copy fallback on desktop.
+- Active navigation — bottom nav highlights the current page.
+- Per-article SEO — title, description, OpenGraph, and Twitter card metadata.
 
 ## Tech Stack
 
@@ -93,6 +108,8 @@ Project explanation files are in `docs/`:
 
 ## Current Status
 
-This is a polished static prototype. It communicates the core product idea well, but it is not yet a full news platform.
+Phase 1 is complete. The prototype is interactive: search works, dark mode works, save and share work, and all navigation pages are live.
 
-The next major work is to add real content workflows, working search, saved articles, language switching, source references, and a backend or CMS.
+The next phase is improving content quality — real source URLs, editorial images, more articles, and replacing placeholder special page content.
+
+After that: language switching, backend infrastructure, AI pipeline, and production readiness.

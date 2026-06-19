@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { BottomNav, TopNav } from "@/components/Platform";
+import Link from "next/link";
+import { SearchBar, DarkModeToggle, BottomNav } from "@/components/Interactive";
+import { languages } from "@/data/news";
 
 export const metadata: Metadata = {
   title: "Bharat Brief | News Explained Simply",
@@ -11,7 +13,22 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
       <body>
-        <TopNav />
+        <header className="topbar">
+          <Link className="brand" href="/" aria-label="Bharat Brief home">
+            <span className="brand-mark">BB</span>
+            <span>Bharat Brief</span>
+          </Link>
+          <SearchBar />
+          <div className="nav-actions">
+            <select aria-label="Select language" defaultValue="English">
+              {languages.map((language) => (
+                <option key={language}>{language}</option>
+              ))}
+            </select>
+            <Link href="/profile" className="icon-button" aria-label="Profile">◐</Link>
+            <DarkModeToggle />
+          </div>
+        </header>
         {children}
         <BottomNav />
       </body>

@@ -1,50 +1,18 @@
 import Link from "next/link";
 import type { CSSProperties } from "react";
-import { Article, articles, chips, languages, relatedExplainers, schemes } from "@/data/news";
+import { Article, articles, chips, relatedExplainers, schemes } from "@/data/news";
+import { ArticleCard } from "@/components/Interactive";
+import { TrustPill } from "@/components/Atoms";
 
-export function TopNav() {
-  return (
-    <header className="topbar">
-      <Link className="brand" href="/" aria-label="Bharat Brief home">
-        <span className="brand-mark">BB</span>
-        <span>Bharat Brief</span>
-      </Link>
-      <label className="search">
-        <span>⌕</span>
-        <input placeholder="Ask what's happening in India..." />
-      </label>
-      <div className="nav-actions">
-        <select aria-label="Select language" defaultValue="English">
-          {languages.map((language) => (
-            <option key={language}>{language}</option>
-          ))}
-        </select>
-        <button className="icon-button" aria-label="Profile">◐</button>
-        <button className="icon-button" aria-label="Toggle dark mode">☾</button>
-      </div>
-    </header>
-  );
-}
-
-export function BottomNav() {
-  return (
-    <nav className="bottom-nav" aria-label="Primary">
-      {["Home", "Explore", "Saved", "Languages", "Profile"].map((item) => (
-        <Link key={item} href={item === "Home" ? "/" : "#"}>
-          <span>{item === "Home" ? "⌂" : item === "Explore" ? "⌕" : item === "Saved" ? "♡" : item === "Languages" ? "अ" : "◐"}</span>
-          {item}
-        </Link>
-      ))}
-    </nav>
-  );
-}
+// Re-export atoms so existing imports like article/[slug]/page.tsx still work
+export { EditorialVisual, TrustPill } from "@/components/Atoms";
 
 export function Hero() {
   return (
     <section className="hero section">
       <div className="hero-copy">
         <p className="eyebrow">AI explainers for India</p>
-        <h1>Understand Today's News in 2 Minutes</h1>
+        <h1>Understand Today&apos;s News in 2 Minutes</h1>
         <p className="hero-subtitle">
           AI-powered explainers that simplify politics, business, technology, sports and world events.
         </p>
@@ -78,57 +46,6 @@ export function Hero() {
         </div>
       </div>
     </section>
-  );
-}
-
-export function EditorialVisual({ type }: { type: Article["visual"] }) {
-  return (
-    <div className={`editorial-visual ${type}`}>
-      <span className="orb one" />
-      <span className="orb two" />
-      <span className="line l1" />
-      <span className="line l2" />
-      <span className="line l3" />
-      <span className="glyph">{visualGlyph[type]}</span>
-    </div>
-  );
-}
-
-const visualGlyph: Record<Article["visual"], string> = {
-  economy: "₹",
-  policy: "⌂",
-  tech: "01",
-  sports: "IPL",
-  world: "◎",
-  education: "A+"
-};
-
-export function TrustPill({ score }: { score: number }) {
-  const label = score >= 90 ? "High Confidence" : "Verified";
-  return <span className="trust-pill">{score}% {label}</span>;
-}
-
-export function ArticleCard({ article }: { article: Article }) {
-  return (
-    <article className="article-card">
-      <EditorialVisual type={article.visual} />
-      <div className="card-body">
-        <span className="category">{article.category}</span>
-        <h3>{article.headline}</h3>
-        <p>{article.summary}</p>
-        <div className="meta-grid">
-          <span>{article.published}</span>
-          <span>{article.readTime}</span>
-          <span>{article.sourceCount} sources</span>
-          <span>{article.language}</span>
-        </div>
-        <div className="card-actions">
-          <Link href={`/article/${article.slug}`}>Read Article</Link>
-          <button>Save</button>
-          <button>Share</button>
-        </div>
-      </div>
-    </article>
   );
 }
 
