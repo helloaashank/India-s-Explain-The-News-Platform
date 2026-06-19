@@ -16,11 +16,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <header className="topbar">
           <Link className="brand" href="/" aria-label="Bharat Brief home">
             <span className="brand-mark">BB</span>
-            <span>Bharat Brief</span>
+            <span className="brand-name">Bharat Brief</span>
           </Link>
           <SearchBar />
           <div className="nav-actions">
-            <select aria-label="Select language" defaultValue="English">
+            <select aria-label="Select language" defaultValue="English" className="lang-select">
               {languages.map((language) => (
                 <option key={language}>{language}</option>
               ))}

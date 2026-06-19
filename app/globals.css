@@ -45,43 +45,82 @@ select {
 
 .topbar {
   align-items: center;
-  backdrop-filter: blur(18px);
-  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.95);
   border-bottom: 1px solid var(--border);
-  display: grid;
-  gap: 12px;
-  grid-template-columns: 1fr auto;
+  display: flex;
+  gap: 8px;
+  height: 56px;
   left: 0;
-  padding: 14px 18px;
+  padding: 0 16px;
   position: sticky;
   right: 0;
   top: 0;
   z-index: 20;
 }
 
+/* Push nav-actions to the far right */
+.topbar .nav-actions {
+  margin-left: auto;
+}
+
 .search-wrapper {
-  grid-column: 1 / -1;
   position: relative;
+  /* Hidden on mobile — icon button shown instead */
+  display: none;
+  flex: 1;
+  max-width: 420px;
+}
+
+/* When expanded (mobile tap) — overlay mode */
+.search-wrapper.expanded {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 10px 16px;
+  background: var(--background);
+  border-bottom: 1px solid var(--border);
+  z-index: 40;
+  max-width: 100%;
+}
+
+.search-wrapper.expanded .search {
+  width: 100%;
+}
+
+/* Mobile: show icon button, hide inline search */
+.search-icon-btn {
+  display: inline-flex;
 }
 
 .brand {
   align-items: center;
   display: inline-flex;
   font-weight: 750;
-  gap: 10px;
-  min-width: 0;
+  gap: 8px;
+  white-space: nowrap;
 }
 
 .brand-mark {
   align-items: center;
   background: var(--primary);
-  border-radius: 12px;
+  border-radius: 10px;
   color: #fff;
   display: inline-flex;
-  font-size: 13px;
-  height: 36px;
+  font-size: 12px;
+  font-weight: 800;
+  height: 32px;
   justify-content: center;
-  width: 36px;
+  width: 32px;
+  flex-shrink: 0;
+}
+
+/* Hide text label on very small screens */
+.brand-name {
+  display: none;
 }
 
 .search {
@@ -91,20 +130,22 @@ select {
   border-radius: 999px;
   display: flex;
   gap: 8px;
-  padding: 11px 14px;
+  padding: 8px 14px;
   width: 100%;
 }
 
 .search span {
   color: var(--secondary);
-  font-size: 20px;
+  font-size: 18px;
   line-height: 1;
+  flex-shrink: 0;
 }
 
 .search input {
   background: transparent;
   border: 0;
   color: var(--primary);
+  font-size: 14px;
   min-width: 0;
   outline: 0;
   width: 100%;
@@ -113,28 +154,28 @@ select {
 .nav-actions {
   align-items: center;
   display: flex;
-  gap: 8px;
+  gap: 6px;
+}
+
+/* Hide language select on mobile */
+.lang-select {
+  display: none;
 }
 
 .nav-actions select,
 .icon-button {
-  background: #fff;
+  background: transparent;
   border: 1px solid var(--border);
   border-radius: 999px;
   color: var(--primary);
-  min-height: 40px;
-}
-
-.nav-actions select {
-  max-width: 92px;
-  padding: 0 10px;
+  height: 36px;
 }
 
 .icon-button {
   align-items: center;
   display: inline-flex;
   justify-content: center;
-  width: 40px;
+  width: 36px;
 }
 
 .section {
@@ -923,12 +964,28 @@ select {
 
 @media (min-width: 740px) {
   .topbar {
-    grid-template-columns: auto minmax(260px, 620px) auto;
-    padding: 16px 30px;
+    gap: 16px;
+    padding: 0 30px;
   }
 
+  /* Show inline search bar, hide icon button */
   .search-wrapper {
-    grid-column: auto;
+    display: flex;
+  }
+
+  .search-icon-btn {
+    display: none;
+  }
+
+  /* Show brand name text */
+  .brand-name {
+    display: inline;
+  }
+
+  /* Show language selector */
+  .lang-select {
+    display: inline-block;
+    padding: 0 12px;
   }
 
   .nav-actions select {
@@ -1025,7 +1082,12 @@ html.dark body {
 
 html.dark .topbar,
 html.dark .bottom-nav {
-  background: rgba(13, 13, 13, 0.92);
+  background: rgba(13, 13, 13, 0.96);
+}
+
+html.dark .nav-actions select,
+html.dark .icon-button {
+  background: transparent;
 }
 
 html.dark .top-story,
@@ -1044,9 +1106,7 @@ html.dark .phone-frame {
 
 html.dark .button.secondary,
 html.dark .card-actions button,
-html.dark .language-switch button,
-html.dark .nav-actions select,
-html.dark .icon-button {
+html.dark .language-switch button {
   background: #1a1a1a;
   color: var(--primary);
 }

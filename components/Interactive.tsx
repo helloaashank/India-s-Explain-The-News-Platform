@@ -37,7 +37,9 @@ export function SearchBar() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<Article[]>([]);
   const [open, setOpen] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   function search(q: string) {
     setQuery(q);
@@ -53,47 +55,59 @@ export function SearchBar() {
     setOpen(true);
   }
 
-  // Close dropdown on outside click
+  function expand() {
+    setExpanded(true);
+    setTimeout(() => inputRef.current?.focus(), 50);
+  }
+
+  function collapse() {
+    setExpanded(false);
+    setQuery("");
+    setResults([]);
+    setOpen(false);
+  }
+
   useEffect(() => {
     function handler(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+        if (!query) setExpanded(false);
+      }
     }
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
-  }, []);
+  }, [query]);
 
   return (
-    <div ref={ref} className="search-wrapper">
+    <div ref={ref} className={`search-wrapper${expanded ? " expanded" : ""}`}>
+      {/* Mobile: tap to expand */}
+      <button className="search-icon-btn icon-button" onClick={expand} aria-label="Search">⌕</button>
+      {/* Input row — always visible on desktop, only when expanded on mobile */}
       <label className="search">
         <span>⌕</span>
         <input
-          placeholder="Ask what's happening in India..."
+          ref={inputRef}
+          placeholder="Search articles..."
           value={query}
           onChange={(e) => search(e.target.value)}
           onFocus={() => query && setOpen(true)}
           aria-label="Search articles"
         />
-        {query && (
-          <button
-            className="search-clear"
-            onClick={() => { setQuery(""); setResults([]); setOpen(false); }}
-            aria-label="Clear search"
-          >
-            ✕
-          </button>
+        {(query || expanded) && (
+          <button className="search-clear" onClick={collapse} aria-label="Close search">✕</button>
         )}
       </label>
       {open && (
         <div className="search-dropdown">
           {results.length === 0 ? (
-            <p className="search-empty">No articles found for &ldquo;{query}&rdquo;</p>
+            <p className="search-empty">No results for &ldquo;{query}&rdquo;</p>
           ) : (
             results.map((a) => (
               <Link
                 key={a.slug}
                 href={`/article/${a.slug}`}
                 className="search-result"
-                onClick={() => { setQuery(""); setOpen(false); }}
+                onClick={() => { setQuery(""); setOpen(false); setExpanded(false); }}
               >
                 <span className="category">{a.category}</span>
                 <strong>{a.headline}</strong>
