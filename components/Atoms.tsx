@@ -1,3 +1,4 @@
+"use client";
 import type { Article } from "@/data/news";
 
 const visualGlyph: Record<Article["visual"], string> = {

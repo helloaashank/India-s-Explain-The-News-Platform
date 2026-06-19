@@ -42,6 +42,25 @@ export function ProfileButton() {
   );
 }
 
+// ── Language selector ────────────────────────────────────────────────────────
+
+import { useT } from "@/components/LangContext";
+import type { Lang } from "@/data/translations";
+
+export function LangSelect() {
+  const { lang, setLang } = useT();
+  return (
+    <select
+      aria-label="Select language"
+      className="lang-select"
+      value={lang}
+      onChange={(e) => setLang(e.target.value as Lang)}
+    >
+      {languages.map((l) => <option key={l}>{l}</option>)}
+    </select>
+  );
+}
+
 // ── Dark mode ────────────────────────────────────────────────────────────────
 
 export function DarkModeToggle() {
@@ -71,6 +90,7 @@ export function DarkModeToggle() {
 // ── Search bar ───────────────────────────────────────────────────────────────
 
 export function SearchBar() {
+  const { T } = useT();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<Article[]>([]);
   const [open, setOpen] = useState(false);
@@ -124,7 +144,7 @@ export function SearchBar() {
         <span>⌕</span>
         <input
           ref={inputRef}
-          placeholder="Search articles..."
+          placeholder={T.searchPlaceholder}
           value={query}
           onChange={(e) => search(e.target.value)}
           onFocus={() => query && setOpen(true)}
@@ -137,7 +157,7 @@ export function SearchBar() {
       {open && (
         <div className="search-dropdown">
           {results.length === 0 ? (
-            <p className="search-empty">No results for &ldquo;{query}&rdquo;</p>
+            <p className="search-empty">{T.noResults} &ldquo;{query}&rdquo;</p>
           ) : (
             results.map((a) => (
               <Link
@@ -188,6 +208,7 @@ export function BottomNav() {
 // ── Save button ───────────────────────────────────────────────────────────────
 
 export function SaveButton({ slug }: { slug: string }) {
+  const { T } = useT();
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
@@ -210,7 +231,7 @@ export function SaveButton({ slug }: { slug: string }) {
 
   return (
     <button onClick={toggle} aria-label={saved ? "Unsave article" : "Save article"} className={saved ? "saved" : ""}>
-      {saved ? "♥ Saved" : "♡ Save"}
+      {saved ? T.saved : T.save}
     </button>
   );
 }
@@ -218,14 +239,13 @@ export function SaveButton({ slug }: { slug: string }) {
 // ── Share button ──────────────────────────────────────────────────────────────
 
 export function ShareButton({ title, slug }: { title: string; slug: string }) {
+  const { T } = useT();
   const [copied, setCopied] = useState(false);
 
   async function share() {
     const url = `${window.location.origin}/article/${slug}`;
     if (navigator.share) {
-      try {
-        await navigator.share({ title, url });
-      } catch { /* user cancelled */ }
+      try { await navigator.share({ title, url }); } catch { /* cancelled */ }
     } else {
       await navigator.clipboard.writeText(url);
       setCopied(true);
@@ -235,7 +255,7 @@ export function ShareButton({ title, slug }: { title: string; slug: string }) {
 
   return (
     <button onClick={share} aria-label="Share article">
-      {copied ? "✓ Copied" : "↑ Share"}
+      {copied ? T.copied : T.share}
     </button>
   );
 }
@@ -245,6 +265,7 @@ export function ShareButton({ title, slug }: { title: string; slug: string }) {
 import { EditorialVisual } from "@/components/Atoms";
 
 export function ArticleCard({ article }: { article: Article }) {
+  const { T } = useT();
   return (
     <article className="article-card">
       <EditorialVisual type={article.visual} />
@@ -255,11 +276,11 @@ export function ArticleCard({ article }: { article: Article }) {
         <div className="meta-grid">
           <span>{article.published}</span>
           <span>{article.readTime}</span>
-          <span>{article.sourceCount} sources</span>
+          <span>{article.sourceCount} {T.sourcesVerified}</span>
           <span>{article.language}</span>
         </div>
         <div className="card-actions">
-          <Link href={`/article/${article.slug}`}>Read Article</Link>
+          <Link href={`/article/${article.slug}`}>{T.readArticle}</Link>
           <SaveButton slug={article.slug} />
           <ShareButton title={article.headline} slug={article.slug} />
         </div>
