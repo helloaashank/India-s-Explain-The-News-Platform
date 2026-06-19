@@ -3,6 +3,8 @@ import puppeteer from "puppeteer";
 import { spawn } from "child_process";
 import { randomUUID } from "crypto";
 import { existsSync, readFileSync } from "fs";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -38,6 +40,7 @@ let browser = null;
 let initializing = null;
 
 app.use(express.json({ limit: "1mb" }));
+app.use(express.static(join(dirname(fileURLToPath(import.meta.url)), "public")));
 
 class Semaphore {
   constructor(max) {
@@ -87,10 +90,12 @@ const pageCreateLimiter = new Semaphore(MAX_CONCURRENT_PAGE_CREATES);
 const messageLimiter = new Semaphore(MAX_CONCURRENT_MESSAGES);
 
 function loadCookies() {
+  if (process.env.CHATGPT_COOKIES) {
+    return JSON.parse(process.env.CHATGPT_COOKIES);
+  }
   if (!existsSync(COOKIES_PATH)) {
     throw new Error(`Cookies file not found at ${COOKIES_PATH}`);
   }
-
   return JSON.parse(readFileSync(COOKIES_PATH, "utf-8"));
 }
 
@@ -276,25 +281,7 @@ async function sendMessage(session, message) {
   }
 }
 
-app.get("/", (req, res) => {
-  res.json({
-    name: "ChatGPT Puppeteer API",
-    limits: {
-      maxSessions: MAX_SESSIONS,
-      maxConcurrentPageCreates: MAX_CONCURRENT_PAGE_CREATES,
-      maxConcurrentMessages: MAX_CONCURRENT_MESSAGES,
-    },
-    endpoints: {
-      health: "GET /health",
-      init: "POST /init",
-      newPage: "POST /pages",
-      sendMessage: "POST /pages/:id/messages",
-      listPages: "GET /pages",
-      closePage: "DELETE /pages/:id",
-      shutdown: "POST /shutdown",
-    },
-  });
-});
+
 
 app.get("/health", (req, res) => {
   res.json({

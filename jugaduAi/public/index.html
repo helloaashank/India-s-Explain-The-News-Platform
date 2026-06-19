@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JugaduAI</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: sans-serif; background: #f4f4f4; display: flex; flex-direction: column; height: 100vh; }
+  #topbar { background: #111; color: #fff; padding: 12px 20px; display: flex; align-items: center; gap: 12px; }
+  #topbar h1 { font-size: 16px; flex: 1; }
+  #status { font-size: 12px; padding: 4px 10px; border-radius: 20px; background: #333; }
+  #status.connected { background: #16a34a; }
+  button { cursor: pointer; border: none; border-radius: 6px; padding: 8px 16px; font-size: 14px; }
+  #initBtn { background: #2563eb; color: #fff; }
+  #initBtn:disabled { background: #555; cursor: default; }
+  #chat { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+  .msg { max-width: 70%; padding: 10px 14px; border-radius: 12px; line-height: 1.5; font-size: 14px; white-space: pre-wrap; }
+  .msg.user { background: #2563eb; color: #fff; align-self: flex-end; border-bottom-right-radius: 2px; }
+  .msg.ai { background: #fff; color: #111; align-self: flex-start; border-bottom-left-radius: 2px; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+  .msg.system { background: #fef9c3; color: #713f12; align-self: center; font-size: 12px; border-radius: 6px; }
+  #inputbar { display: flex; gap: 8px; padding: 12px 20px; background: #fff; border-top: 1px solid #e5e7eb; }
+  #msgInput { flex: 1; padding: 10px 14px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; outline: none; }
+  #msgInput:focus { border-color: #2563eb; }
+  #sendBtn { background: #2563eb; color: #fff; padding: 10px 20px; }
+  #sendBtn:disabled { background: #93c5fd; cursor: default; }
+  .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid #ccc; border-top-color: #2563eb; border-radius: 50%; animation: spin .6s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <h1>⚡ JugaduAI</h1>
+  <span id="status">Not connected</span>
+  <button id="initBtn">Initialize</button>
+</div>
+
+<div id="chat"></div>
+
+<div id="inputbar">
+  <input id="msgInput" type="text" placeholder="Type a message..." disabled />
+  <button id="sendBtn" disabled>Send</button>
+</div>
+
+<script>
+  let sessionId = null;
+
+  const chat = document.getElementById('chat');
+  const status = document.getElementById('status');
+  const initBtn = document.getElementById('initBtn');
+  const msgInput = document.getElementById('msgInput');
+  const sendBtn = document.getElementById('sendBtn');
+
+  function addMsg(text, type) {
+    const div = document.createElement('div');
+    div.className = `msg ${type}`;
+    div.textContent = text;
+    chat.appendChild(div);
+    chat.scrollTop = chat.scrollHeight;
+    return div;
+  }
+
+  async function post(path, body) {
+    const res = await fetch(path, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: body ? JSON.stringify(body) : undefined
+    });
+    return res.json();
+  }
+
+  initBtn.addEventListener('click', async () => {
+    initBtn.disabled = true;
+    addMsg('Initializing browser...', 'system');
+    try {
+      const r = await post('/init');
+      if (!r.ok) throw new Error(r.error);
+      status.textContent = 'Browser ready';
+      status.className = 'connected';
+      addMsg('Browser connected. Creating session...', 'system');
+
+      const s = await post('/pages');
+      if (s.error) throw new Error(s.error);
+      sessionId = s.id;
+      addMsg('Session ready. You can now chat!', 'system');
+      msgInput.disabled = false;
+      sendBtn.disabled = false;
+      msgInput.focus();
+    } catch (e) {
+      addMsg('Error: ' + e.message, 'system');
+      initBtn.disabled = false;
+    }
+  });
+
+  async function sendMessage() {
+    const text = msgInput.value.trim();
+    if (!text || !sessionId) return;
+    msgInput.value = '';
+    sendBtn.disabled = true;
+    msgInput.disabled = true;
+    addMsg(text, 'user');
+    const thinking = addMsg('', 'ai');
+    thinking.innerHTML = '<span class="spinner"></span>';
+    try {
+      const r = await post(`/pages/${sessionId}/messages`, { message: text });
+      thinking.textContent = r.response || r.error || 'No response';
+    } catch (e) {
+      thinking.textContent = 'Error: ' + e.message;
+    }
+    sendBtn.disabled = false;
+    msgInput.disabled = false;
+    msgInput.focus();
+  }
+
+  sendBtn.addEventListener('click', sendMessage);
+  msgInput.addEventListener('keydown', e => e.key === 'Enter' && sendMessage());
+</script>
+</body>
+</html>
