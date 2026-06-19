@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Link from "next/link";
-import { SearchBar, DarkModeToggle, BottomNav } from "@/components/Interactive";
+import { SearchBar, DarkModeToggle, BottomNav, ProfileButton } from "@/components/Interactive";
 import { languages } from "@/data/news";
 
 export const metadata: Metadata = {
@@ -25,7 +25,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                 <option key={language}>{language}</option>
               ))}
             </select>
-            <Link href="/profile" className="icon-button" aria-label="Profile">◐</Link>
+            <ProfileButton />
             <DarkModeToggle />
           </div>
         </header>

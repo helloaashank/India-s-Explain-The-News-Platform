@@ -1209,3 +1209,202 @@ html.dark .search-dropdown {
 .empty-state p {
   margin: 6px 0;
 }
+
+/* ── Auth pages ───────────────────────────────────────────────────────────── */
+.auth-page {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-height: calc(100dvh - 56px);
+  padding: 24px 16px 80px;
+}
+
+.auth-card {
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  max-width: 400px;
+  padding: 36px 32px;
+  width: 100%;
+}
+
+.auth-brand {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  font-weight: 750;
+  margin-bottom: 28px;
+}
+
+.auth-card h1 {
+  font-size: 28px;
+  line-height: 1;
+  margin: 0 0 6px;
+}
+
+.auth-sub {
+  color: var(--secondary);
+  margin: 0 0 24px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.auth-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.auth-form label span {
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.auth-form input {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--primary);
+  height: 46px;
+  outline: 0;
+  padding: 0 14px;
+  transition: border-color 150ms;
+  width: 100%;
+}
+
+.auth-form input:focus {
+  border-color: var(--accent);
+}
+
+.auth-submit {
+  align-items: center;
+  background: var(--primary);
+  border: 1px solid var(--primary);
+  border-radius: 999px;
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 15px;
+  font-weight: 650;
+  height: 48px;
+  justify-content: center;
+  margin-top: 4px;
+  width: 100%;
+}
+
+.auth-submit.secondary {
+  background: transparent;
+  color: var(--primary);
+}
+
+.auth-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  color: #dc2626;
+  font-size: 13px;
+  padding: 10px 14px;
+  margin: 0;
+}
+
+.auth-switch {
+  color: var(--secondary);
+  font-size: 14px;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.auth-switch a {
+  color: var(--accent);
+  font-weight: 650;
+}
+
+.auth-note {
+  color: var(--secondary);
+  font-size: 12px;
+  margin-top: 12px;
+  text-align: center;
+}
+
+/* ── Profile dashboard ───────────────────────────────────────────────────── */
+.profile-header {
+  align-items: center;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.profile-avatar {
+  align-items: center;
+  background: var(--primary);
+  border-radius: 999px;
+  color: #fff;
+  display: flex;
+  font-size: 22px;
+  font-weight: 750;
+  height: 60px;
+  justify-content: center;
+  width: 60px;
+  flex-shrink: 0;
+}
+
+.profile-header h1 {
+  font-size: 26px;
+  margin: 0 0 2px;
+}
+
+.profile-email {
+  color: var(--secondary);
+  font-size: 14px;
+  margin: 0;
+}
+
+.profile-signout {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--secondary);
+  cursor: pointer;
+  font-size: 13px;
+  margin-left: auto;
+  padding: 8px 16px;
+  transition: color 150ms;
+}
+
+.profile-signout:hover {
+  color: var(--primary);
+}
+
+/* ── Avatar initials in topbar ───────────────────────────────────────────── */
+.avatar-initials {
+  align-items: center;
+  background: var(--primary);
+  border-radius: 999px;
+  color: #fff;
+  display: flex;
+  font-size: 13px;
+  font-weight: 750;
+  height: 28px;
+  justify-content: center;
+  width: 28px;
+}
+
+/* dark mode auth */
+html.dark .auth-card {
+  background: #161616;
+}
+
+html.dark .auth-form input {
+  background: #1a1a1a;
+}
+
+html.dark .auth-error {
+  background: #2a0a0a;
+  border-color: #7f1d1d;
+  color: #f87171;
+}

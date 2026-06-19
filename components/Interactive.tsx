@@ -1,9 +1,46 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import type { Article } from "@/data/news";
 import { articles, languages } from "@/data/news";
+
+// ── Mock auth ────────────────────────────────────────────────────────────────
+
+type AuthUser = { name: string; email: string };
+
+export function mockSignIn(user: AuthUser) {
+  localStorage.setItem("auth-user", JSON.stringify(user));
+}
+
+export function mockSignOut() {
+  localStorage.removeItem("auth-user");
+}
+
+export function useAuth() {
+  const [user, setUser] = useState<AuthUser | null>(null);
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("auth-user");
+      setUser(raw ? JSON.parse(raw) : null);
+    } catch { setUser(null); }
+  }, []);
+  return { user, signOut: () => { mockSignOut(); setUser(null); } };
+}
+
+// ── Profile button (auth-aware) ───────────────────────────────────────────
+
+export function ProfileButton() {
+  const { user } = useAuth();
+  const href = user ? "/profile" : "/signin";
+  return (
+    <Link href={href} className="icon-button" aria-label={user ? "Your profile" : "Sign in"}>
+      {user ? (
+        <span className="avatar-initials">{user.name.charAt(0).toUpperCase()}</span>
+      ) : "◐"}
+    </Link>
+  );
+}
 
 // ── Dark mode ────────────────────────────────────────────────────────────────
 
